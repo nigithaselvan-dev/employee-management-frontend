@@ -1,110 +1,91 @@
 import { useState } from "react";
 import API from "../api/axios";
 
+function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-function Login(){
+  const handleLogin = async (e) => {
+    e.preventDefault();
 
-    const [email,setEmail] = useState("");
-    const [password,setPassword] = useState("");
+    try {
+      const response = await API.post("/auth/login", {
+        email,
+        password,
+      });
 
+      console.log(response.data);
+      localStorage.setItem("token", response.data.token);
+      window.location.href = "/dashboard";
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
-    const handleLogin = async(e)=>{
+  return (
+    <div
+      className="d-flex justify-content-center align-items-center"
+      style={{
+        minHeight: "100vh",
+        background: "#f4f7fc",
+      }}
+    >
+      <div
+        className="card shadow-lg p-4"
+        style={{
+          width: "420px",
+          borderRadius: "15px",
+        }}
+      >
+        <h2 className="text-center fw-bold mb-2">
+          Employee Management System
+        </h2>
 
-        e.preventDefault();
+        <p className="text-center text-muted mb-4">
+          Admin Login
+        </p>
 
+        <form onSubmit={handleLogin}>
+          <div className="mb-3">
+            <label className="form-label fw-semibold">
+              Email
+            </label>
 
-        try{
+            <input
+              type="email"
+              className="form-control"
+              placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
 
-            const response = await API.post("/auth/login",{
+          <div className="mb-4">
+            <label className="form-label fw-semibold">
+              Password
+            </label>
 
-                email,
-                password
+            <input
+              type="password"
+              className="form-control"
+              placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
 
-            });
-
-
-            console.log(response.data);
-            localStorage.setItem("token", response.data.token);
-            window.location.href = "/dashboard";
-
-
-        }
-        catch(error){
-
-            console.log(error.message);
-
-        }
-
-    };
-
-
-    return(
-
-        <div>
-
-            <h2 className="text-center mb-4">
-
-Employee Management System
-
-</h2>
-
-<h4 className="text-center text-muted mb-4">
-
-Admin Login
-
-</h4>
-
-
-            <form onSubmit={handleLogin}>
-
-
-                <input
-
-                type="email"
-
-                placeholder="Email"
-
-                value={email}
-
-                onChange={(e)=>setEmail(e.target.value)}
-
-                />
-
-
-                <br/>
-
-
-                <input
-
-                type="password"
-
-                placeholder="Password"
-
-                value={password}
-
-                onChange={(e)=>setPassword(e.target.value)}
-
-                />
-
-
-                <br/>
-
-
-                <button type="submit">
-
-                    Login
-
-                </button>
-
-
-            </form>
-
-
-        </div>
-
-    )
-
+          <button
+            type="submit"
+            className="btn btn-primary w-100"
+          >
+            Login
+          </button>
+        </form>
+      </div>
+    </div>
+  );
 }
-
 
 export default Login;
